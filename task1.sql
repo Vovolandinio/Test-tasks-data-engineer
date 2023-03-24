@@ -1,17 +1,17 @@
-CREATE SCHEMA test_task;
+CREATE SCHEMA task_one;
 
 -- Задание: необходимо найти 3-х самых молодых сотрудников в коллективе и выдать их имена,
 -- предварительно отсортировав. Задачу требуется решить несколькими способами (чем больше, тем
 -- лучше).
 
-CREATE TABLE test_task.employees
+CREATE TABLE task_one.employees
 (
     id   SERIAL primary key,
     name varchar(20),
     age  int
 );
 
-INSERT INTO test_task.employees (name, age)
+INSERT INTO task_one.employees (name, age)
 VALUES ('Вася', 23),
        ('Петя', 40),
        ('Маша', 19),
@@ -23,37 +23,37 @@ VALUES ('Вася', 23),
 
 
 -- Вариант 1
-SELECT test_task.employees.name
-FROM test_task.employees
-ORDER BY test_task.employees.age, test_task.employees.name
+SELECT task_one.employees.name
+FROM task_one.employees
+ORDER BY task_one.employees.age, task_one.employees.name
 LIMIT 3;
 
 -- Вариант 2
 SELECT name
-FROM (SELECT test_task.employees.name, ROW_NUMBER() OVER (ORDER BY test_task.employees.age) AS row_number
-      FROM test_task.employees
-      ORDER BY test_task.employees.age, test_task.employees.name) subquery
+FROM (SELECT task_one.employees.name, ROW_NUMBER() OVER (ORDER BY task_one.employees.age) AS row_number
+      FROM task_one.employees
+      ORDER BY task_one.employees.age, task_one.employees.name) subquery
 WHERE subquery.row_number <= 3;
 
 -- Варинт 3
 SELECT name
-FROM (SELECT test_task.employees.name, RANK() OVER (ORDER BY test_task.employees.age) AS row_number
-      FROM test_task.employees
-      ORDER BY test_task.employees.age, test_task.employees.name) subquery
+FROM (SELECT task_one.employees.name, RANK() OVER (ORDER BY task_one.employees.age) AS row_number
+      FROM task_one.employees
+      ORDER BY task_one.employees.age, task_one.employees.name) subquery
 WHERE subquery.row_number <= 3
 LIMIT 3;
 
 -- Варинт 4
-SELECT test_task.employees.name
-FROM test_task.employees
-ORDER BY test_task.employees.age, test_task.employees.name
+SELECT task_one.employees.name
+FROM task_one.employees
+ORDER BY task_one.employees.age, task_one.employees.name
     FETCH FIRST 3 ROWS ONLY;
 
 -- Вариант 5
 WITH helpers AS
-         (SELECT test_task.employees.name
-          FROM test_task.employees
-          ORDER BY test_task.employees.age, test_task.employees.name)
+         (SELECT task_one.employees.name
+          FROM task_one.employees
+          ORDER BY task_one.employees.age, task_one.employees.name)
 SELECT *
 FROM helpers
 LIMIT 3;
