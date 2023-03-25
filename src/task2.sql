@@ -17,8 +17,8 @@ VALUES ('7072110988', '32722', '2021-08-18 13:15'),
        ('7071107101', '12533', '2021-08-19 09:15'),
        ('7071107101', '32722', '2021-08-19 09:27');
 
-SELECT DISTINCT ON  (date_trunc('day', task_two.calls.dttm), task_two.calls.abonent) task_two.calls.abonent,
-                                                                                      task_two.calls.region_id,
-                                                                                      to_char(task_two.calls.dttm,'YYYY-MM-DD HH24:MI')
+SELECT DISTINCT ON (date_trunc('day', task_two.calls.dttm), task_two.calls.abonent) task_two.calls.abonent,
+                                                                                    task_two.calls.region_id,
+                                                                                    to_char(task_two.calls.dttm, 'YYYY-MM-DD HH24:MI')
 FROM task_two.calls
 ORDER BY task_two.calls.abonent DESC, date_trunc('day', task_two.calls.dttm), task_two.calls.dttm DESC;

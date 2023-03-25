@@ -11,8 +11,7 @@ CREATE TABLE task_five.posts
 );
 
 INSERT INTO task_five.posts (created_at, title)
-VALUES
-       ('2023-02-04 16:44:36', 'Hu Tao: The Newest 5-Star Pyro Character'),
+VALUES ('2023-02-04 16:44:36', 'Hu Tao: The Newest 5-Star Pyro Character'),
        ('2023-03-10 14:57:32', 'Mastercard vs UnionPay'),
        ('2023-03-23 12:34:56', 'Xiao vs Eula: Who Is the Better Damage Dealer?'),
        ('2023-03-25 08:12:45', 'Hadoop or Greenplum: pros and cons'),
@@ -31,8 +30,10 @@ WITH monthly_posts AS
           GROUP BY month_start),
      monthly_growth AS (SELECT monthly_posts.month_start,
                                monthly_posts.post_count,
-                               LAG(monthly_posts.post_count) OVER (ORDER BY monthly_posts.month_start) AS prev_post_count,
-                               (monthly_posts.post_count - LAG(monthly_posts.post_count) OVER (ORDER BY monthly_posts.month_start)) * 100.0 /
+                               LAG(monthly_posts.post_count)
+                               OVER (ORDER BY monthly_posts.month_start)                               AS prev_post_count,
+                               (monthly_posts.post_count -
+                                LAG(monthly_posts.post_count) OVER (ORDER BY monthly_posts.month_start)) * 100.0 /
                                LAG(monthly_posts.post_count) OVER (ORDER BY monthly_posts.month_start) AS prcnt_growth
                         FROM monthly_posts)
 SELECT to_char(month_start, 'YYYY-MM-DD') AS dt,
