@@ -8,7 +8,7 @@ CREATE TABLE task_one.employees
 (
     id   SERIAL primary key,
     name varchar(20),
-    age  int
+    age  SMALLINT NOT NULL
 );
 
 INSERT INTO task_one.employees (name, age)
