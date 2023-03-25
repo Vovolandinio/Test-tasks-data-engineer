@@ -29,7 +29,8 @@ SELECT DISTINCT task_three_four.transaction_details.customer_id,
 FROM task_three_four.transaction_details
          INNER JOIN task_three_four.dict_item_prices
                     ON task_three_four.transaction_details.item_id = task_three_four.dict_item_prices.item_id AND
-                       task_three_four.transaction_details.transaction_dttm::date BETWEEN task_three_four.dict_item_prices.valid_from_dt::date AND task_three_four.dict_item_prices.valid_to_dt::date
+                       task_three_four.transaction_details.transaction_dttm::date BETWEEN task_three_four.dict_item_prices.valid_from_dt::date
+                           AND task_three_four.dict_item_prices.valid_to_dt::date
 WHERE task_three_four.transaction_details.transaction_dttm::date >=
       DATE_TRUNC('month', current_date::date) - INTERVAL '1' MONTH
 GROUP BY task_three_four.transaction_details.customer_id, task_three_four.dict_item_prices.item_name,
