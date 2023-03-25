@@ -18,13 +18,6 @@ VALUES (1, 1, 0, 2, '2023-02-24 12:30:00'),
        (6, 3, 0, 2, '2023-02-26 11:30:00');
 
 
-SELECT task_three_four.transaction_details.customer_id,
-       SUM(task_three_four.transaction_details.item_number * task_three_four.dict_item_prices.item_price)
-FROM task_three_four.transaction_details
-         INNER JOIN task_three_four.dict_item_prices ON transaction_details.item_id = dict_item_prices.item_id
-    AND transaction_details.transaction_dttm BETWEEN dict_item_prices.valid_from_dt AND dict_item_prices.valid_to_dt
-group by task_three_four.transaction_details.customer_id;
-
 CREATE TABLE task_three_four.customer_aggr AS
 SELECT DISTINCT td.customer_id,
                 SUM(td.item_number * dip.item_price)
