@@ -25,7 +25,7 @@ SELECT DISTINCT td.customer_id,
                 FIRST_VALUE(dip.item_name)
                 OVER (PARTITION BY td.customer_id ORDER BY SUM(td.item_number * dip.item_price) DESC) AS top_item_1m
 FROM task_three_four.transaction_details td
-         JOIN task_three_four.dict_item_prices dip
+        INNER JOIN task_three_four.dict_item_prices dip
               ON td.item_id = dip.item_id AND
                  td.transaction_dttm::date BETWEEN dip.valid_from_dt::date AND dip.valid_to_dt::date
 WHERE td.transaction_dttm::date >= DATE_TRUNC('month', current_date::date) - INTERVAL '1' MONTH
