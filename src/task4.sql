@@ -19,15 +19,19 @@ VALUES (1, 1, 0, 2, '2023-02-24 12:30:00'),
 
 
 CREATE TABLE task_three_four.customer_aggr AS
-SELECT DISTINCT td.customer_id,
-                SUM(td.item_number * dip.item_price)
-                OVER (PARTITION BY td.customer_id)                                                    AS amount_spent_1m,
-                FIRST_VALUE(dip.item_name)
-                OVER (PARTITION BY td.customer_id ORDER BY SUM(td.item_number * dip.item_price) DESC) AS top_item_1m
-FROM task_three_four.transaction_details td
-        INNER JOIN task_three_four.dict_item_prices dip
-              ON td.item_id = dip.item_id AND
-                 td.transaction_dttm::date BETWEEN dip.valid_from_dt::date AND dip.valid_to_dt::date
-WHERE td.transaction_dttm::date >= DATE_TRUNC('month', current_date::date) - INTERVAL '1' MONTH
-GROUP BY td.customer_id, dip.item_name, td.item_number, dip.item_price
-HAVING SUM(td.item_number * dip.item_price) > 0;
+SELECT DISTINCT task_three_four.transaction_details.customer_id,
+                SUM(task_three_four.transaction_details.item_number * task_three_four.dict_item_prices.item_price)
+                OVER (PARTITION BY task_three_four.transaction_details.customer_id) AS amount_spent_1m,
+                FIRST_VALUE(task_three_four.dict_item_prices.item_name)
+                OVER (PARTITION BY task_three_four.transaction_details.customer_id ORDER BY SUM(
+                            task_three_four.transaction_details.item_number *
+                            task_three_four.dict_item_prices.item_price) DESC)      AS top_item_1m
+FROM task_three_four.transaction_details
+         INNER JOIN task_three_four.dict_item_prices
+                    ON task_three_four.transaction_details.item_id = task_three_four.dict_item_prices.item_id AND
+                       task_three_four.transaction_details.transaction_dttm::date BETWEEN task_three_four.dict_item_prices.valid_from_dt::date AND task_three_four.dict_item_prices.valid_to_dt::date
+WHERE task_three_four.transaction_details.transaction_dttm::date >=
+      DATE_TRUNC('month', current_date::date) - INTERVAL '1' MONTH
+GROUP BY task_three_four.transaction_details.customer_id, task_three_four.dict_item_prices.item_name,
+         task_three_four.transaction_details.item_number, task_three_four.dict_item_prices.item_price
+HAVING SUM(task_three_four.transaction_details.item_number * task_three_four.dict_item_prices.item_price) > 0;
